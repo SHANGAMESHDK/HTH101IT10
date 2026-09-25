@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Wallet, Clock, MapPin, Zap, Crown, ArrowRight, CarFront } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function UserDashboard() {
   const [balance, setBalance] = useState(350);
@@ -25,15 +26,41 @@ export default function UserDashboard() {
 
   const currentFare = Math.floor(sessionTime * 0.5); // 0.5 per sec for demo
 
-  const parkingCategories = [
+  const [parkingCategories, setParkingCategories] = useState([
     { name: 'Premium', available: 2, total: 10, icon: <Crown size={20} />, color: 'var(--premium)', gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)' },
     { name: 'Sedan', available: 15, total: 20, icon: <MapPin size={20} />, color: 'var(--primary)', gradient: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)' },
     { name: 'SUV', available: 8, total: 20, icon: <MapPin size={20} />, color: 'var(--text-main)', gradient: 'linear-gradient(135deg, #475569 0%, #1e293b 100%)' },
-    { name: 'EV / Hatchback', available: 5, total: 15, icon: <Zap size={20} />, color: 'var(--success)', gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' },
-  ];
+    { name: 'Hatchback', available: 5, total: 15, icon: <Zap size={20} />, color: 'var(--success)', gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' },
+  ]);
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080');
+    
+    ws.onmessage = (event) => {
+      try {
+        const msg = JSON.parse(event.data);
+        if (msg.event === 'CAR_CLASSIFIED') {
+          const { category } = msg.data;
+          
+          setParkingCategories(prev => prev.map(cat => {
+            // Find if the assigned category matches one of our zones
+            if (category.includes(cat.name) && cat.available > 0) {
+              return { ...cat, available: cat.available - 1 };
+            }
+            return cat;
+          }));
+          
+          toast(`A ${category} just entered the facility!`);
+        }
+      } catch(e) { }
+    };
+
+    return () => ws.close();
+  }, []);
 
   return (
     <div className="grid gap-4">
+      <Toaster position="top-right" />
       <div className="flex justify-between items-center mb-4">
         <div>
           <h1>User View</h1>

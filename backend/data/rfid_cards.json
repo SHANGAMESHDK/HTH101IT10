@@ -1,0 +1,80 @@
+[
+  {
+    "uid": "04:A1:B2:C3",
+    "holderName": "Alice Johnson",
+    "balance": 239,
+    "isPremiumMember": true,
+    "vehiclePlate": "KA-01-MJ-5566",
+    "vehicleModel": "Honda CR-V",
+    "category": "SUV",
+    "parkingId": "P-01",
+    "lotNumber": "Lot #15",
+    "assignedColor": "#3B82F6",
+    "colorName": "Cobalt Royal Blue"
+  },
+  {
+    "uid": "53:92:7A:1B",
+    "holderName": "Bob Smith",
+    "balance": 45,
+    "isPremiumMember": false,
+    "vehiclePlate": "DL-04-EV-8821",
+    "vehicleModel": "Tata Nexon EV",
+    "category": "EV",
+    "parkingId": "P-EV",
+    "lotNumber": "Lot #05",
+    "assignedColor": "#10B981",
+    "colorName": "Electric Green"
+  },
+  {
+    "uid": "12:34:56:78",
+    "holderName": "Carlos Sainz",
+    "balance": 500,
+    "isPremiumMember": true,
+    "vehiclePlate": "MH-02-CD-9999",
+    "vehicleModel": "Mercedes-Benz C-Class",
+    "category": "LUXURY",
+    "parkingId": "P-VIP",
+    "lotNumber": "Lot #01",
+    "assignedColor": "#A855F7",
+    "colorName": "Royal Purple"
+  },
+  {
+    "uid": "AA:BB:CC:DD",
+    "holderName": "David Miller",
+    "balance": 80,
+    "isPremiumMember": false,
+    "vehiclePlate": "KA-05-TX-1002",
+    "vehicleModel": "Maruti Dzire Tour (Commercial)",
+    "category": "COMMERCIAL",
+    "parkingId": "P-COMM",
+    "lotNumber": "Lot #10",
+    "assignedColor": "#F59E0B",
+    "colorName": "Amber Yellow"
+  },
+  {
+    "uid": "99:88:77:66",
+    "holderName": "Elena Rostova",
+    "balance": 150,
+    "isPremiumMember": false,
+    "vehiclePlate": "KA-02-SD-3344",
+    "vehicleModel": "Honda City",
+    "category": "SEDAN",
+    "parkingId": "P-02",
+    "lotNumber": "Lot #20",
+    "assignedColor": "#06B6D4",
+    "colorName": "Executive Cyan"
+  },
+  {
+    "uid": "44:55:66:77",
+    "holderName": "Fahad Khan",
+    "balance": 90,
+    "isPremiumMember": false,
+    "vehiclePlate": "KA-03-HB-7890",
+    "vehicleModel": "Maruti Suzuki Swift",
+    "category": "HATCHBACK",
+    "parkingId": "P-03",
+    "lotNumber": "Lot #30",
+    "assignedColor": "#EC4899",
+    "colorName": "Coral Pink"
+  }
+]

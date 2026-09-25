@@ -1,17 +1,17 @@
-#include <WiFi.h>
-#include <WebSocketsClient.h>
-#include <SPI.h>
-#include <MFRC522.h>
-#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <MFRC522.h>
 #include <NewPing.h>
+#include <SPI.h>
+#include <WebSocketsClient.h>
+#include <WiFi.h>
+#include <Wire.h>
 
 // WiFi Credentials
-const char* ssid = "YOUR_WIFI_SSID";
-const char* password = "YOUR_WIFI_PASSWORD";
+const char *ssid = "YOUR_WIFI_SSID";
+const char *password = "YOUR_WIFI_PASSWORD";
 
 // WebSocket Server
-const char* ws_host = "YOUR_BACKEND_IP";
+const char *ws_host = "YOUR_BACKEND_IP";
 const uint16_t ws_port = 8080;
 WebSocketsClient webSocket;
 
@@ -20,7 +20,7 @@ const String SLOT_ID = "S-12";
 
 // RFID Pins
 #define RST_PIN 22
-#define SS_PIN  21
+#define SS_PIN 21
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 // Ultrasonic Pins
@@ -37,9 +37,9 @@ bool isParked = false;
 unsigned long parkStartTime = 0;
 String currentParkedRFID = "";
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+void webSocketEvent(WStype_t type, uint8_t *payload, size_t length) {
   if (type == WStype_TEXT) {
-    String msg = (char*)payload;
+    String msg = (char *)payload;
     if (msg.indexOf("INVALID_SLOT") > 0) {
       lcd.clear();
       lcd.setCursor(0, 0);
@@ -94,22 +94,24 @@ void loop() {
   webSocket.loop();
 
   // 1. Posture & Occupancy Check
-  delay(50); 
+  delay(50);
   unsigned int distance = sonar.ping_cm();
   bool carDetected = (distance > 0 && distance < 100); // Car is within 100cm
-  
+
   if (!isParked && carDetected) {
-     // Car just arrived but hasn't tapped yet
-     // We can notify backend of a physical arrival without tap
+    // Car just arrived but hasn't tapped yet
+    // We can notify backend of a physical arrival without tap
   }
-  
+
   if (isParked && !carDetected) {
     // Car left
     isParked = false;
     unsigned long duration = (millis() - parkStartTime) / 1000;
-    String wsPayload = "{\"event\":\"SLOT_EXIT\", \"slot\":\"" + SLOT_ID + "\", \"rfid\":\"" + currentParkedRFID + "\", \"duration\":" + String(duration) + "}";
+    String wsPayload = "{\"event\":\"SLOT_EXIT\", \"slot\":\"" + SLOT_ID +
+                       "\", \"rfid\":\"" + currentParkedRFID +
+                       "\", \"duration\":" + String(duration) + "}";
     webSocket.sendTXT(wsPayload);
-    
+
     currentParkedRFID = "";
     updateLCDState();
   }
@@ -122,16 +124,17 @@ void loop() {
       rfid += String(mfrc522.uid.uidByte[i], HEX);
     }
     rfid.toUpperCase();
-    
+
     if (!isParked && carDetected) {
       // Valid tap-in
       isParked = true;
       parkStartTime = millis();
       currentParkedRFID = rfid;
-      
-      String wsPayload = "{\"event\":\"SLOT_TAP\", \"slot\":\"" + SLOT_ID + "\", \"rfid\":\"" + rfid + "\"}";
+
+      String wsPayload = "{\"event\":\"SLOT_TAP\", \"slot\":\"" + SLOT_ID +
+                         "\", \"rfid\":\"" + rfid + "\"}";
       webSocket.sendTXT(wsPayload);
-      
+
       updateLCDState();
     }
     delay(2000);
@@ -142,14 +145,15 @@ void loop() {
     unsigned long duration = (millis() - parkStartTime) / 1000;
     int m = duration / 60;
     int s = duration % 60;
-    
+
     char timeStr[10];
     sprintf(timeStr, "Time: %02d:%02d", m, s);
-    
+
     lcd.setCursor(0, 1);
     lcd.print(timeStr);
-    
-    // Check posture logic (e.g. if distance is too close or too far while parked)
+
+    // Check posture logic (e.g. if distance is too close or too far while
+    // parked)
     if (distance > 0 && distance < 10) {
       lcd.setCursor(15, 1);
       lcd.print("!"); // Warning indicator on LCD
